@@ -1,0 +1,20 @@
+{
+  "name": "lppedrodesign",
+  "version": "1.0.0",
+  "description": "Portf?lio de identidades visuais com formul?rio de or?amento.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo Netlify static deploy",
+    "dev": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "nodemailer": "^9.0.0"
+  }
+}
