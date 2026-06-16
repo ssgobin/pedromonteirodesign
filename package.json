@@ -1,7 +1,7 @@
 {
   "name": "lppedrodesign",
   "version": "1.0.0",
-  "description": "Portf?lio de identidades visuais com formul?rio de or?amento.",
+  "description": "Portfolio de identidades visuais com formulario de orcamento.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
