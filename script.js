@@ -16,6 +16,9 @@ const budgetModal = document.querySelector("[data-budget-modal]");
 const whatsappSend = document.querySelector("[data-whatsapp-send]");
 const emailSend = document.querySelector("[data-email-send]");
 const budgetStatus = document.querySelector("[data-budget-status]");
+const revealTargets = document.querySelectorAll(
+  ".section-copy, .section-heading, .intro-grid article, .portfolio-card, .service-list article, .budget-panel, .faq-list details, .contact-form"
+);
 
 const projects = {
   "active-life": {
@@ -108,6 +111,8 @@ const projects = {
 let lastFocusedElement = null;
 let lastBudgetFocusedElement = null;
 let currentBudgetPayload = null;
+
+setupRevealAnimations();
 
 navToggle?.addEventListener("click", () => {
   const isOpen = navToggle.getAttribute("aria-expanded") === "true";
@@ -288,3 +293,34 @@ emailSend?.addEventListener("click", async () => {
     emailSend.classList.remove("is-loading");
   }
 });
+
+function setupRevealAnimations() {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  revealTargets.forEach((element, index) => {
+    element.classList.add("reveal");
+    element.dataset.revealDelay = String(index % 4);
+  });
+
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    revealTargets.forEach((element) => element.classList.add("is-visible"));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    },
+    {
+      rootMargin: "0px 0px -12% 0px",
+      threshold: 0.14
+    }
+  );
+
+  revealTargets.forEach((element) => observer.observe(element));
+}

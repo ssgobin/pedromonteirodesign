@@ -31,6 +31,8 @@
   --radius-lg: 38px;
   --shadow-1: rgb(0, 0, 0) 6px 7px 0 0;
   --motion-duration-instant: 300ms;
+  --motion-duration-slow: 720ms;
+  --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * {
@@ -49,6 +51,18 @@ body {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-base);
   line-height: var(--line-height-base);
+}
+
+body::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 18px 18px, rgba(2, 1, 0, 0.12) 2px, transparent 2px),
+    linear-gradient(135deg, rgba(204, 51, 102, 0.08), transparent 38%);
+  background-size: 34px 34px, 100% 100%;
+  content: "";
 }
 
 body.menu-open {
@@ -206,11 +220,13 @@ textarea {
   cursor: pointer;
   font-weight: 800;
   text-decoration: none;
-  transition: transform var(--motion-duration-instant), box-shadow var(--motion-duration-instant), background var(--motion-duration-instant);
+  transition: transform var(--motion-duration-instant), box-shadow var(--motion-duration-instant), background var(--motion-duration-instant), filter var(--motion-duration-instant);
 }
 
 .button:hover {
-  transform: translate(-2px, -2px);
+  filter: saturate(1.14);
+  transform: translate(-4px, -4px) rotate(-0.5deg);
+  box-shadow: rgb(0, 0, 0) 9px 10px 0 0;
 }
 
 .button:active {
@@ -255,11 +271,13 @@ textarea {
   overflow: hidden;
   background: var(--color-surface-base);
   border-bottom: 2px solid var(--color-border-default);
+  isolation: isolate;
 }
 
 .hero-media {
   position: absolute;
   inset: 0;
+  animation: heroFloat 16s ease-in-out infinite alternate;
 }
 
 .hero-media::after {
@@ -274,7 +292,8 @@ textarea {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  transform: scaleX(-1);
+  transform: scaleX(-1) scale(1.04);
+  animation: heroImageIn 1100ms var(--motion-ease-out) both;
 }
 
 .hero-content {
@@ -284,6 +303,25 @@ textarea {
   margin: 0 auto;
   padding: 11vh 0 13vh;
   color: var(--color-surface-strong);
+}
+
+.hero-content .eyebrow,
+.hero-content h1,
+.hero-content p,
+.hero-actions {
+  animation: riseIn var(--motion-duration-slow) var(--motion-ease-out) both;
+}
+
+.hero-content h1 {
+  animation-delay: 90ms;
+}
+
+.hero-content p {
+  animation-delay: 180ms;
+}
+
+.hero-actions {
+  animation-delay: 270ms;
 }
 
 .hero h1 {
@@ -329,6 +367,10 @@ textarea {
   min-width: max-content;
   padding: var(--space-4) var(--space-6);
   animation: marquee 22s linear infinite;
+}
+
+.marquee:hover span {
+  animation-play-state: paused;
 }
 
 @keyframes marquee {
@@ -390,6 +432,15 @@ textarea {
   border: 2px solid var(--color-border-default);
   border-radius: var(--radius-xs);
   box-shadow: var(--shadow-1);
+  transition: transform var(--motion-duration-instant), box-shadow var(--motion-duration-instant), background var(--motion-duration-instant);
+}
+
+.intro-grid article:hover,
+.service-list article:hover,
+.portfolio-card:hover,
+.faq-list details:hover {
+  transform: translateY(-5px);
+  box-shadow: rgb(0, 0, 0) 8px 10px 0 0;
 }
 
 .intro-grid article {
@@ -456,6 +507,11 @@ textarea {
   border: 2px solid var(--color-border-default);
   border-radius: 999px;
   font-weight: 900;
+  transition: transform var(--motion-duration-instant);
+}
+
+.service-list article:hover span {
+  transform: rotate(-8deg) scale(1.08);
 }
 
 .service-list a {
@@ -480,15 +536,16 @@ textarea {
   border: 0;
   cursor: pointer;
   text-align: inherit;
+  overflow: hidden;
 }
 
 .portfolio-trigger img {
-  transition: transform var(--motion-duration-instant), filter var(--motion-duration-instant);
+  transition: transform 650ms var(--motion-ease-out), filter var(--motion-duration-instant);
 }
 
 .portfolio-trigger:hover img {
   filter: saturate(1.12) contrast(1.04);
-  transform: scale(1.02);
+  transform: scale(1.06);
 }
 
 .portfolio-card-featured {
@@ -527,6 +584,7 @@ textarea {
   display: grid;
   place-items: center;
   padding: var(--space-6);
+  animation: fadeIn var(--motion-duration-instant) ease both;
 }
 
 .project-modal-backdrop {
@@ -545,6 +603,7 @@ textarea {
   border: 2px solid var(--color-border-default);
   border-radius: var(--radius-xs);
   box-shadow: var(--shadow-1);
+  animation: modalIn 420ms var(--motion-ease-out) both;
 }
 
 .modal-close {
@@ -644,6 +703,12 @@ textarea {
   border: 2px solid var(--color-border-default);
   border-radius: var(--radius-xs);
   box-shadow: var(--shadow-1);
+  transition: transform var(--motion-duration-instant), box-shadow var(--motion-duration-instant);
+}
+
+.modal-gallery img:hover {
+  transform: translateY(-4px);
+  box-shadow: rgb(0, 0, 0) 9px 11px 0 0;
 }
 
 .budget-dialog {
@@ -719,6 +784,22 @@ textarea {
 .budget-panel {
   padding: clamp(28px, 5vw, 56px);
   background: var(--color-surface-raised);
+  position: relative;
+  overflow: hidden;
+}
+
+.budget-panel::after {
+  position: absolute;
+  right: -32px;
+  bottom: -32px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, var(--color-border-default) 2px, transparent 3px);
+  background-size: 20px 20px;
+  content: "";
+  opacity: 0.28;
+  transform: rotate(-8deg);
+  animation: dotDrift 9s ease-in-out infinite alternate;
 }
 
 .budget-panel h2 {
@@ -755,6 +836,95 @@ textarea {
   min-height: var(--line-height-base);
   margin: 0;
   font-weight: 800;
+}
+
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  background: #fff9f4;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity var(--motion-duration-slow) var(--motion-ease-out), transform var(--motion-duration-slow) var(--motion-ease-out);
+}
+
+.reveal[data-reveal-delay="1"] {
+  transition-delay: 80ms;
+}
+
+.reveal[data-reveal-delay="2"] {
+  transition-delay: 160ms;
+}
+
+.reveal[data-reveal-delay="3"] {
+  transition-delay: 240ms;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroImageIn {
+  from {
+    opacity: 0;
+    transform: scaleX(-1) scale(1.12);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(-1) scale(1.04);
+  }
+}
+
+@keyframes heroFloat {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -14px, 0);
+  }
+}
+
+@keyframes dotDrift {
+  from {
+    transform: translate3d(0, 0, 0) rotate(-8deg);
+  }
+  to {
+    transform: translate3d(-18px, -12px, 0) rotate(4deg);
+  }
 }
 
 .site-footer {
@@ -892,5 +1062,14 @@ textarea {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .hero-media img {
+    transform: scaleX(-1);
   }
 }
